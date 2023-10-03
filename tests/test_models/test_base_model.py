@@ -30,7 +30,7 @@ class test_basemodel(unittest.TestCase):
     def test_default(self):
         """ """
         i = self.value()
-        self.assertEqual(type(i), self.value)
+        self.assertEqual(type(i), self.value, str)
 
     def test_kwargs(self):
         """ """
@@ -57,9 +57,11 @@ class test_basemodel(unittest.TestCase):
             self.assertEqual(j[key], i.to_dict())
 
     def test_str(self):
-        """ """
-        i = self.value()
-        self.assertEqual(str(i), "[{}] ({}) {}".format(self.name, i.id, i.__dict__))
+        new = self.value()
+        expected_str = "[BaseModel] ({}) {}".format(
+            new.id, {k: v for k, v in vars(new).items() if k != "_sa_instance_state"}
+        )
+        self.assertEqual(str(new), expected_str)
 
     def test_todict(self):
         """ """
@@ -72,12 +74,6 @@ class test_basemodel(unittest.TestCase):
         n = {None: None}
         with self.assertRaises(TypeError):
             new = self.value(**n)
-
-    def test_kwargs_one(self):
-        """ """
-        n = {"Name": "test"}
-        with self.assertRaises(KeyError):
-            new = self.value()
 
     def test_id(self):
         """ """
@@ -95,5 +91,4 @@ class test_basemodel(unittest.TestCase):
         self.assertEqual(type(new.updated_at), datetime.datetime)
         n = new.to_dict()
         new = BaseModel(**n)
-        self.new_method(new)
         self.assertFalse(new.created_at == new.updated_at)

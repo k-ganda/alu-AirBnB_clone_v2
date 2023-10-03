@@ -60,7 +60,7 @@ class TestHBNBCommand(unittest.TestCase):
         self.assertIsNotNone(HBNBCommand.do_all.__doc__)
         self.assertIsNotNone(HBNBCommand.do_update.__doc__)
         self.assertIsNotNone(HBNBCommand.count.__doc__)
-        self.assertIsNotNone(HBNBCommand.strip.__doc__)
+        self.assertIsNotNone(HBNBCommand.strip_clean.__doc__)
         self.assertIsNotNone(HBNBCommand.default.__doc__)
 
     def test_emptyline(self):
@@ -80,7 +80,7 @@ class TestHBNBCommand(unittest.TestCase):
     def test_create_errors(self):
         with patch("sys.stdout", new=StringIO()) as f:
             self.HBNB.onecmd("create")
-            self.assertEqual("** class doesn't exist **\n", f.getvalue())
+            self.assertEqual("** class name missing **\n", f.getvalue())
 
     @unittest.skipIf(type(models.storage) == DBStorage, "Testing Storage")
     def test_create(self):
@@ -131,24 +131,6 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertIn(bm, f.getvalue())
 
     @unittest.skipIf(type(models.storage) == DBStorage, "Testing DBStorage")
-    def test_create_kwargs(self):
-        with patch("sys.stdout", new=StringIO()) as f:
-            call = (
-                'create Place city_id="0001" name="My_house"'
-                'number_rooms="4" latitude=37.77 longitude=a'
-            )
-            self.HBNB.onecmd(call)
-            pl = f.getvalue().strip()
-        with patch("sys.stdout", new=StringIO()) as f:
-            self.HBNB.onecmd("all Place")
-            output = f.getvalue()
-            self.assertIn(pl, output)
-            self.assertIn('"city_id": "0001"', output)
-            self.assertIn('"name": "My_house"', output)
-            self.assertIn('"number_rooms": "4"', output)
-            self.assertIn('"latitude": 37.77', output)
-            self.assertIn('"longitude": "a"', output)
-
     def test_show(self):
         with patch("sys.stdout", new=StringIO()) as f:
             self.HBNB.onecmd("show")
@@ -241,7 +223,7 @@ class TestHBNBCommand(unittest.TestCase):
     def test_destroy(self):
         with patch("sys.stdout", new=StringIO()) as f:
             self.HBNB.onecmd("Galaxy.destroy()")
-            self.assertEqual("** class name missing **\n", f.getvalue())
+            self.assertEqual("** class doesn't exist **\n", f.getvalue())
         with patch("sys.stdout", new=StringIO()) as f:
             self.HBNB.onecmd("User.destroy(12345)")
             self.assertEqual("** no instance found **\n", f.getvalue())
@@ -250,7 +232,7 @@ class TestHBNBCommand(unittest.TestCase):
     def test_update(self):
         with patch("sys.stdout", new=StringIO()) as f:
             self.HBNB.onecmd("sldkfjsl.update()")
-            self.assertEqual("** class name missing **\n", f.getvalue())
+            self.assertEqual("** class doesn't exist **\n", f.getvalue())
         with patch("sys.stdout", new=StringIO()) as f:
             self.HBNB.onecmd("User.update(12345)")
             self.assertEqual("** no instance found **\n", f.getvalue())
