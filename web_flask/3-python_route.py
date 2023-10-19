@@ -1,55 +1,35 @@
 #!/usr/bin/python3
 
-
-"""Script to start a Flask web application."""
+"""Script that starts a Flask web application"""
 from flask import Flask
 
 app = Flask(__name__)
 
-@app.route("/", strict_slashes=False)
-def hello():
-    """Route handler for the root URL ("/").
 
-    Returns:
-        str: The string "Hello HBNB!".
-    """
+@app.route('/', strict_slashes=False)
+def hello_hbnb():
+    """Comment"""
     return "Hello HBNB!"
 
-@app.route("/hbnb", strict_slashes=False)
-def hbnb():
-    """Route handler for the "/hbnb" URL.
 
-    Returns:
-        str: The string "HBNB".
-    """
+@app.route('/hbnb', strict_slashes=False)
+def hbnb():
+    """Comment"""
     return "HBNB"
 
-@app.route("/c/<text>", strict_slashes=False)
-def c(text):
-    """Route handler for the "/c/<text>" URL.
 
-    Args:
-        text (str): The text parameter extracted from the URL.
+@app.route('/c/<text>', strict_slashes=False)
+def text_route(text):
+    """Comment"""
+    return "C {}".format(text.replace("_", " "))
 
-    Returns:
-        str: The modified string with underscores replaced by spaces and prefixed with "C ".
-    """
-    text = text.replace("_", " ")
-    return f"C {text}"
 
-@app.route("/python", strict_slashes=False)
-@app.route("/python/<text>", strict_slashes=False)
-def python(text="is cool"):
-    """Route handler for the "/python" and "/python/<text>" URLs.
+@app.route('/python', strict_slashes=False)
+@app.route('/python/<text>', strict_slashes=False)
+def text_route_python(text="is cool"):
+    """Comment"""
+    return "Python {}".format(text.replace("_", " "))
 
-    Args:
-        text (str, optional): The text parameter extracted from the URL. Defaults to "is cool".
 
-    Returns:
-        str: The modified string with underscores replaced by spaces and prefixed with "Python ".
-    """
-    text = text.replace("_", " ")
-    return f"Python {text}"
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
